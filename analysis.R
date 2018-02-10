@@ -29,7 +29,6 @@ A2010 <- cbind(A2010,rowSums(A2010))
 colnames(A2010) <- c(colnames(A2010)[-length(colnames(A2010))], "Total")
 
 
-
 ####################################################################################
 
 ## Use strings in Col 1 as row names
@@ -80,18 +79,26 @@ title("Border Patrol Apprehensions by Sector", outer=TRUE)
 
 #COMPARE 2010 AND 2017 BY MONTH
 
-par(mfcol=c(1,2))
-barplot(A2010$Total, 
+par(mfcol=c(1,2),oma=c(0,0,2,0))
+barplot(unname(t(A2010)[1:12,10]), 
         names.arg = colnames(A2010)[1:12], 
         las=2,
         axisnames=TRUE,
-        main="2010 Border Patrol Apprehensions by Month",
+        main="2010",
         border="blue",
-        col="yellow")
+        col="yellow",
+        ylim=c(0,60000))
 
 
-
-
+barplot(unname(t(A2017)[1:12,10]), 
+        names.arg = colnames(A2017)[1:12], 
+        las=2,
+        axisnames=TRUE,
+        main="2017",
+        border="blue",
+        col="yellow",
+        ylim=c(0,60000))
+title("Border Patrol Apprehensions by Month", outer=TRUE)
 
 
 #use sample statistics tests to compare sector with most apprehensions for 2010
