@@ -56,34 +56,38 @@ colnames(A2017) <- c(colnames(A2017)[-length(colnames(A2017))], "Total")
 
 #COMPARE 2010 AND 2017 BY SECTOR
 
+par(mfcol=c(1,2),oma=c(0,0,2,0))
 
 barplot(A2010[1:9,13], 
         names.arg = rownames(A2010)[1:9], 
         las=2,
         axisnames=TRUE,
-        main="2010 Border Patrol Apprehensions by Sector",
+        main="2010",
         border="blue",
-        col="yellow")
+        col="yellow",
+        ylim=c(0,200000))
 
 barplot(A2017[1:9,13], 
         names.arg = rownames(A2017)[1:9], 
         las=2,
         axisnames=TRUE,
-        main="2017 Border Patrol Apprehensions by Sector",
+        main="2017",
         border="blue",
-        col="yellow")
+        col="yellow",
+        ylim=c(0,200000))
+
+title("Border Patrol Apprehensions by Sector", outer=TRUE)
 
 #COMPARE 2010 AND 2017 BY MONTH
 
-barplot(A2010[10,1:12], 
+par(mfcol=c(1,2))
+barplot(A2010$Total, 
         names.arg = colnames(A2010)[1:12], 
         las=2,
         axisnames=TRUE,
         main="2010 Border Patrol Apprehensions by Month",
         border="blue",
         col="yellow")
-
-
 
 
 
