@@ -54,7 +54,7 @@ A2017 <- cbind(A2017,rowSums(A2017))
 colnames(A2017) <- c(colnames(A2017)[-length(colnames(A2017))], "Total")
 
 
-#COMPARE 2010 AND 2017 BY MONTH AND SECTOR (VISUALLY)
+#COMPARE 2010 AND 2017 BY SECTOR
 
 
 barplot(A2010[1:9,13], 
@@ -72,6 +72,23 @@ barplot(A2017[1:9,13],
         main="2017 Border Patrol Apprehensions by Sector",
         border="blue",
         col="yellow")
+
+#COMPARE 2010 AND 2017 BY MONTH
+
+barplot(A2010[10,1:12], 
+        names.arg = colnames(A2010)[1:12], 
+        las=2,
+        axisnames=TRUE,
+        main="2010 Border Patrol Apprehensions by Month",
+        border="blue",
+        col="yellow")
+
+
+
+
+
+
+
 
 #use sample statistics tests to compare sector with most apprehensions for 2010
 #with sector with most apprehensions in 2017
