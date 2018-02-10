@@ -17,9 +17,6 @@ A2000.2017 <- A2000.2017[18:1,]
 rownames(A2000.2017) <- c()
 A2000.2017 <- unname(A2000.2017)
 
-
-
-
 #### organiza data with Rownames, Column Totals, and Row Totals
 
 ## Use strings in Col 1 as row names
@@ -118,11 +115,39 @@ title("Border Patrol Apprehensions by Month", outer=TRUE)
 
 #use sample statistics tests to compare sector with most apprehensions for 2010 with sector with most apprehensions in 2017
 
+Sector_Totals_2010 <- A2010[1:9,13]
+names(Sector_Totals_2010) <- rownames(A2010[1:9,])
+
+Sector_Totals_2017 <- A2017[1:9,13]
+names(Sector_Totals_2017) <- rownames(A2017[1:9,])
+
+MA_2017_index <- which(Sector_Totals_2017 == max(Sector_Totals_2017))
+MA_2010_index <- which(Sector_Totals_2010 == max(Sector_Totals_2010))
+
+MA_2017 <- A2017[MA_2017_index,1:12]
+MA_2010 <- A2010[MA_2010_index,1:12]
+
+t.test(MA_2010,MA_2017)
+
+t.test(MA_2010,A2017[MA_2010_index,1:12])
+t.test(MA_2017,A2010[MA_2017_index,1:12])
 
 #compare 3 month periods with the most apprehensions in 2010 and 2017
 
+col <- c("Oct-Dec", "Jan-Mar", "Apr-Jun","Jul-Sep")
+Monthly_Totals_2010 <- (t(A2010)[1:12,10])
 
-#make time series chart from monthly summary
+  #Breakdown 
+  A2010_3 <- rbind(sum(Monthly_Totals_2010[1:3]),sum(Monthly_Totals_2010[4:6]),sum(Monthly_Totals_2010[7:9]),sum(Monthly_Totals_2010[10:12]))
+
+Monthly_Totals_2017 <- (t(A2017)[1:12,10])
+
+  #Breakdown 
+  A2017_3 <- rbind(sum(Monthly_Totals_2017[1:3]),sum(Monthly_Totals_2017[4:6]),sum(Monthly_Totals_2017[7:9]),sum(Monthly_Totals_2017[10:12]))
+  
+t.test(Monthly_Totals_2010[4:6],Monthly_Totals_2017[1:3])
+
+# TIME SERIES 
 
 ts2 <- as.vector(t(A2000.2017))
 time_series <- ts(ts2, start = c(2000,10), frequency=12)
