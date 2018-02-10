@@ -4,6 +4,21 @@ A2010 <- read.csv( "BP Apprehensions 2010.csv" , header = TRUE, stringsAsFactors
 A2017 <- read.csv("PB Apprehensions 2017.csv", header = TRUE, stringsAsFactors = FALSE)
 A2000.2017 <- read.csv("PB monthly summaries.csv", header = TRUE, stringsAsFactors = FALSE)
 
+#### organiza data with Rownames, Column Totals, and Row Totals
+
+## Use strings in Col 1 as row names
+rownames(A2000.2017) <- A2000.2017[,1]
+
+## Drop column 1
+A2000.2017 <-  subset(A2000.2017, select= -c(year))
+
+## Reorder
+A2000.2017 <- A2000.2017[18:1,]
+rownames(A2000.2017) <- c()
+A2000.2017 <- unname(A2000.2017)
+
+
+
 
 #### organiza data with Rownames, Column Totals, and Row Totals
 
@@ -101,11 +116,16 @@ barplot(unname(t(A2017)[1:12,10]),
 title("Border Patrol Apprehensions by Month", outer=TRUE)
 
 
-#use sample statistics tests to compare sector with most apprehensions for 2010
-#with sector with most apprehensions in 2017
+#use sample statistics tests to compare sector with most apprehensions for 2010 with sector with most apprehensions in 2017
 
 
 #compare 3 month periods with the most apprehensions in 2010 and 2017
 
 
 #make time series chart from monthly summary
+
+ts2 <- as.vector(t(A2000.2017))
+time_series <- ts(ts2, start = c(2000,10), frequency=12)
+ts.plot(time_series, gpars=list(xlab="year", ylab="Apprehensions", lty=c(1:3)))
+title("Border Patrol Apprehensions Year")
+
