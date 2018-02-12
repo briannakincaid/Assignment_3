@@ -1,22 +1,29 @@
-#Analysis
+\documentclass[letterpaper]{article}
+\usepackage[latin1]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[left=2.00cm, right=2.00cm, top=2.00cm, bottom=2.00cm]{geometry}
 
+\begin{document}
+\DefineVerbatimEnvironment{Sinput}{Verbatim} {xleftmargin=2em,frame=single}
+\DefineVerbatimEnvironment{Soutput}{Verbatim}{xleftmargin=2em,frame=single}
+\SweaveOpts{concordance=TRUE}
+
+\title{US-Mexico Border Apprehensions}
+\maketitle
+
+\section{Data Import and Cleaning}
+
+\subsection{Import Data}
+<<tidy: (FALSE; logical)>>=
 A2010 <- read.csv( "BP Apprehensions 2010.csv" , header = TRUE, stringsAsFactors = FALSE)
 A2017 <- read.csv("PB Apprehensions 2017.csv", header = TRUE, stringsAsFactors = FALSE)
-A2000.2017 <- read.csv("PB monthly summaries.csv", header = TRUE, stringsAsFactors = FALSE)
+@
 
-#### organiza data with Rownames, Column Totals, and Row Totals
-
-## Use strings in Col 1 as row names
-rownames(A2000.2017) <- A2000.2017[,1]
-
-## Drop column 1
-A2000.2017 <-  subset(A2000.2017, select= -c(year))
-
-## Reorder
-A2000.2017 <- A2000.2017[18:1,]
-rownames(A2000.2017) <- c()
-A2000.2017 <- unname(A2000.2017)
-
+\subsection{Clean Data}
+<<>>=
 #### organiza data with Rownames, Column Totals, and Row Totals
 
 ## Use strings in Col 1 as row names
@@ -63,51 +70,54 @@ A2017 <- cbind(A2017,rowSums(A2017))
 
 ## rename last column "Totals
 colnames(A2017) <- c(colnames(A2017)[-length(colnames(A2017))], "Total")
+@
 
+\section{2010 and 2017 Compared}
 
-#COMPARE 2010 AND 2017 BY SECTOR
+\subsection{By Sector}
+<<fig=TRUE>>=
+par(mfcol=c(1,2),oma=c(0,0,2,0))
 
-## WAY ONE
+barplot(A2010[1:9,13], 
+        names.arg = rownames(A2010)[1:9], 
+        las=2,
+        axisnames=TRUE,
+        main="2010",
+        border="blue",
+        col="yellow",
+        ylim=c(0,200000))
 
-    par(mfcol=c(1,2),oma=c(0,0,2,0))
+barplot(A2017[1:9,13], 
+        names.arg = rownames(A2017)[1:9], 
+        las=2,
+        axisnames=TRUE,
+        main="2017",
+        border="blue",
+        col="yellow",
+        ylim=c(0,200000))
+
+title("Border Patrol Apprehensions by Sector", outer=TRUE)
+@
+
+\subsection{By Sector (Way Two)}
+
+<<fig=TRUE>>=
+year2010 <- t(as.data.frame(matrix(A2010[1:9,13])))
+colnames(year2010) <- rownames(A2010[1:9,])
     
-    barplot(A2010[1:9,13], 
-            names.arg = rownames(A2010)[1:9], 
-            las=2,
-            axisnames=TRUE,
-            main="2010",
-            border="blue",
-            col="yellow",
-            ylim=c(0,200000))
+year2017 <- t(as.data.frame(matrix(A2017[1:9,13])))
+colnames(year2017) <- rownames(A2017[1:9,])
     
-    barplot(A2017[1:9,13], 
-            names.arg = rownames(A2017)[1:9], 
-            las=2,
-            axisnames=TRUE,
-            main="2017",
-            border="blue",
-            col="yellow",
-            ylim=c(0,200000))
+year2010_17 <- rbind(year2010, year2017)
+row.names(year2010_17) <- c("2010", "2017")
     
-    title("Border Patrol Apprehensions by Sector", outer=TRUE)
-
-## WAY TWO 
-
-    year2010 <- t(as.data.frame(matrix(A2010[1:9,13])))
-    colnames(year2010) <- rownames(A2010[1:9,])
+barplot(as.matrix(year2010_17), beside = TRUE, col = c("red", "blue"), bty="n",las=2)
+legend("topleft", c("2010","2017"), pch=15,  col=c("red","blue"),  bty="n")
+title("Border Patrol Apprehensions by Sector")
+@
     
-    year2017 <- t(as.data.frame(matrix(A2017[1:9,13])))
-    colnames(year2017) <- rownames(A2017[1:9,])
-    
-    year2010_17 <- rbind(year2010, year2017)
-    row.names(year2010_17) <- c("2010", "2017")
-    
-    barplot(as.matrix(year2010_17), beside = TRUE, col = c("red", "blue"), bty="n" )
-    legend("topleft", c("2010","2017"), pch=15,  col=c("red","blue"),  bty="n")
-
-    
-#COMPARE 2010 AND 2017 BY MONTH
-
+\subsection{By Month}
+<<fig=TRUE>>=
 par(mfcol=c(1,2),oma=c(0,0,2,0))
 barplot(unname(t(A2010)[1:12,10]), 
         names.arg = colnames(A2010)[1:12], 
@@ -128,10 +138,13 @@ barplot(unname(t(A2017)[1:12,10]),
         col="yellow",
         ylim=c(0,60000))
 title("Border Patrol Apprehensions by Month", outer=TRUE)
+@
 
+\subsection{t-test}
 
-#use sample statistics tests to compare sector with most apprehensions for 2010 with sector with most apprehensions in 2017
+\subsubsection{Comparison between sector with most apprehensions for 2010 with sector with most apprehensions in 2017}
 
+<<>>=
 Sector_Totals_2010 <- A2010[1:9,13]
 names(Sector_Totals_2010) <- rownames(A2010[1:9,])
 
@@ -148,9 +161,11 @@ t.test(MA_2010,MA_2017)
 
 t.test(MA_2010,A2017[MA_2010_index,1:12])
 t.test(MA_2017,A2010[MA_2017_index,1:12])
+@
 
-#compare 3 month periods with the most apprehensions in 2010 and 2017
+\subsubsection{compare 3 month periods with the most apprehensions in 2010 and 2017}
 
+<<>>=
 col <- c("Oct-Dec", "Jan-Mar", "Apr-Jun","Jul-Sep")
 Monthly_Totals_2010 <- (t(A2010)[1:12,10])
 
@@ -163,11 +178,40 @@ Monthly_Totals_2017 <- (t(A2017)[1:12,10])
   A2017_3 <- rbind(sum(Monthly_Totals_2017[1:3]),sum(Monthly_Totals_2017[4:6]),sum(Monthly_Totals_2017[7:9]),sum(Monthly_Totals_2017[10:12]))
   
 t.test(Monthly_Totals_2010[4:6],Monthly_Totals_2017[1:3])
+@
 
-# TIME SERIES 
+\section{Overall Trends}
 
+\subsection{Data Cleaning}
+<<>>=
+
+A2000.2017 <- read.csv("PB monthly summaries.csv", header = TRUE, stringsAsFactors = FALSE)
+
+## Use strings in Col 1 as row names
+rownames(A2000.2017) <- A2000.2017[,1]
+
+## Drop column 1
+A2000.2017 <-  subset(A2000.2017, select= -c(year))
+
+## Reorder
+A2000.2017 <- A2000.2017[18:1,]
+rownames(A2000.2017) <- c()
+A2000.2017 <- unname(A2000.2017)
+@
+
+\subsection{Time Series}
+<<fig=TRUE>>=
 ts2 <- as.vector(t(A2000.2017))
 time_series <- ts(ts2, start = c(2000,10), frequency=12)
 ts.plot(time_series, gpars=list(xlab="year", ylab="Apprehensions", lty=c(1:3)))
-title("Border Patrol Apprehensions Year")
 
+meanbyyear <- rowMeans(A2000.2017)
+years <- c(2000:2017)
+lines(years,meanbyyear,col="red")
+
+
+title("Border Patrol Apprehensions Year")
+legend("topright", c("Average Apprehensions"), pch=15,  col="red",  bty="n")
+@
+
+\end{document}
