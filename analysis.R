@@ -108,26 +108,41 @@ colnames(A2017) <- c(colnames(A2017)[-length(colnames(A2017))], "Total")
     
 #COMPARE 2010 AND 2017 BY MONTH
 
-par(mfcol=c(1,2),oma=c(0,0,2,0))
-barplot(unname(t(A2010)[1:12,10]), 
-        names.arg = colnames(A2010)[1:12], 
-        las=2,
-        axisnames=TRUE,
-        main="2010",
-        border="blue",
-        col="yellow",
-        ylim=c(0,60000))
+    ## WAY ONE
+    par(mfcol=c(1,2),oma=c(0,0,2,0))
+    barplot(unname(t(A2010)[1:12,10]), 
+            names.arg = colnames(A2010)[1:12], 
+            las=2,
+            axisnames=TRUE,
+            main="2010",
+            border="blue",
+            col="yellow",
+            ylim=c(0,60000))
+    
+    
+    barplot(unname(t(A2017)[1:12,10]), 
+            names.arg = colnames(A2017)[1:12], 
+            las=2,
+            axisnames=TRUE,
+            main="2017",
+            border="blue",
+            col="yellow",
+            ylim=c(0,60000))
+    title("Border Patrol Apprehensions by Month", outer=TRUE)
 
 
-barplot(unname(t(A2017)[1:12,10]), 
-        names.arg = colnames(A2017)[1:12], 
-        las=2,
-        axisnames=TRUE,
-        main="2017",
-        border="blue",
-        col="yellow",
-        ylim=c(0,60000))
-title("Border Patrol Apprehensions by Month", outer=TRUE)
+    #WAY TWO
+    year2010 <- t(as.data.frame(matrix(unname(t(A2010)[1:12,10]))))
+    colnames(year2010) <- colnames(A2010[1:12])
+    
+    year2017 <- t(as.data.frame(matrix(unname(t(A2017)[1:12,10]))))
+    colnames(year2017) <- colnames(A2017[1:12])
+    
+    year2010_17 <- rbind(year2010, year2017)
+    row.names(year2010_17) <- c("2010", "2017")
+    
+    barplot(as.matrix(year2010_17), beside = TRUE, col = c("red", "blue"), bty="n" )
+    legend("topleft", c("2010","2017"), pch=15,  col=c("red","blue"),  bty="n")
 
 
 #use sample statistics tests to compare sector with most apprehensions for 2010 with sector with most apprehensions in 2017

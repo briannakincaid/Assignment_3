@@ -12,7 +12,11 @@
 \SweaveOpts{concordance=TRUE}
 
 \title{US-Mexico Border Apprehensions}
+\author{Kevin Chan, Brianna Kincaid, Lauren Vanvalkenburg}
+\date{}
 \maketitle
+
+Data on U.S. Border Patrol Southwest Border Apprehensions released by the US Customs and Border Protrection (CBP) in 2017 revealed that apprehensions of individuals attempting to illegally cross the Southern border has decreased from 447,731 in 2010 to 303,196 in 2017. Here is an analysis of that data. 
 
 \section{Data Import and Cleaning}
 
@@ -22,53 +26,113 @@ A2010 <- read.csv( "BP Apprehensions 2010.csv" , header = TRUE, stringsAsFactors
 A2017 <- read.csv("PB Apprehensions 2017.csv", header = TRUE, stringsAsFactors = FALSE)
 @
 
+\begin{table}[ht]
+\centering
+\begin{tabular}{p{0.7in}cccccccccccc}
+  \hline
+ & October & November & December & January & February & March & April & May & June & July & August & September \\ 
+  \hline
+Big Bend & 530.00 & 421.00 & 373.00 & 433.00 & 484.00 & 660.00 & 575.00 & 493.00 & 415.00 & 280.00 & 295.00 & 329.00 \\ 
+  Del Rio & 1119.00 & 897.00 & 697.00 & 1234.00 & 1245.00 & 1874.00 & 1791.00 & 1718.00 & 1326.00 & 767.00 & 1095.00 & 931.00 \\ 
+  El Centro & 2589.00 & 2412.00 & 2196.00 & 2688.00 & 2836.00 & 4408.00 & 3419.00 & 3126.00 & 2440.00 & 2331.00 & 2075.00 & 2042.00 \\ 
+  El Paso & 1007.00 & 894.00 & 725.00 & 1124.00 & 1140.00 & 1528.00 & 1359.00 & 1380.00 & 1005.00 & 725.00 & 732.00 & 632.00 \\ 
+  Laredo & 2613.00 & 2130.00 & 1802.00 & 2526.00 & 3173.00 & 4433.00 & 4528.00 & 3813.00 & 3475.00 & 1857.00 & 2819.00 & 2118.00 \\ 
+  Rio Grande & 4236.00 & 3688.00 & 2987.00 & 3658.00 & 4845.00 & 7141.00 & 7139.00 & 7477.00 & 5595.00 & 3832.00 & 5329.00 & 3839.00 \\ 
+  San Diego & 5017.00 & 4738.00 & 4636.00 & 6413.00 & 6982.00 & 9061.00 & 7115.00 & 5858.00 & 5092.00 & 5113.00 & 4528.00 & 4012.00 \\ 
+  Tucson & 23197.00 & 16986.00 & 10907.00 & 16122.00 & 21266.00 & 31197.00 & 28579.00 & 22572.00 & 13160.00 & 10303.00 & 9280.00 & 8633.00 \\ 
+  Yuma & 582.00 & 649.00 & 711.00 & 586.00 & 819.00 & 1059.00 & 732.00 & 608.00 & 447.00 & 401.00 & 262.00 & 260.00 \\ 
+   \hline
+\end{tabular}
+\caption{CBP Data for 2010} 
+\end{table}
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{p{0.7in}cccccccccccc}
+  \hline
+ & October & November & December & January & February & March & April & May & June & July & August & September \\ 
+  \hline
+Big Bend & 697.00 & 603.00 & 477.00 & 473.00 & 383.00 & 357.00 & 413.00 & 552.00 & 378.00 & 492.00 & 563.00 & 614.00 \\ 
+  Del Rio & 2106.00 & 1880.00 & 1817.00 & 1243.00 & 1104.00 & 746.00 & 589.00 & 740.00 & 761.00 & 760.00 & 798.00 & 932.00 \\ 
+  El Centro & 2441.00 & 1850.00 & 1870.00 & 1796.00 & 1196.00 & 871.00 & 849.00 & 1134.00 & 1280.00 & 1478.00 & 1880.00 & 1988.00 \\ 
+  El Paso & 3973.00 & 4105.00 & 3948.00 & 2779.00 & 1575.00 & 978.00 & 906.00 & 1032.00 & 1180.00 & 1395.00 & 1782.00 & 1540.00 \\ 
+  Laredo & 3350.00 & 3194.00 & 2460.00 & 2265.00 & 1710.00 & 1256.00 & 1304.00 & 1722.00 & 1839.00 & 2120.00 & 2143.00 & 2097.00 \\ 
+  Rio Grande & 22642.00 & 24686.00 & 23418.00 & 15580.00 & 7855.00 & 4147.00 & 3942.00 & 4882.00 & 5817.00 & 7107.00 & 8650.00 & 8836.00 \\ 
+  San Diego & 2934.00 & 2947.00 & 3099.00 & 2927.00 & 1808.00 & 1356.00 & 1392.00 & 1724.00 & 1652.00 & 1764.00 & 2241.00 & 2242.00 \\ 
+  Tucson & 5924.00 & 5912.00 & 4303.00 & 3357.00 & 2589.00 & 2148.00 & 1487.00 & 2199.00 & 2632.00 & 2177.00 & 2913.00 & 3016.00 \\ 
+  Yuma & 2117.00 & 2034.00 & 1859.00 & 1156.00 & 534.00 & 336.00 & 245.00 & 534.00 & 548.00 & 894.00 & 1318.00 & 1272.00 \\ 
+   \hline
+\end{tabular}
+\caption{CBP Data for 2017} 
+\end{table}
+
+The CBP data we analyze here includes total apprehensions broken down by month and sector for both 2010 and 2017. The data includes statistics for Big Bend, Del Rio, El Centro, El Paso, Laredo, Rio Grande Valley, San Diego, Tucson, and Yuma. 
+
 \subsection{Clean Data}
+Here we are organizing the data with column and row totals with the appropriate row and column names.
+
+\subsubsection{2010 Data}
+
+Use strings in Col 1 as row names
+
 <<>>=
-#### organiza data with Rownames, Column Totals, and Row Totals
-
-## Use strings in Col 1 as row names
 rownames(A2010) <- A2010[,1]
+@
 
-## Drop column 1
+Drop column 1
+<<>>=
 A2010 <-  subset(A2010, select= -c(Sector))
+@
 
-## rbind ColSums to dataframe
+rbind ColSums to dataframe
+<<>>=
 A2010 <- rbind(A2010, colSums(A2010))
+@
 
-## rbind assigns a rowname -- drop this name
--length(rownames(A2010))  
-
-## rename the row with column totals "Total"
+rbind assigns a rowname -- drop this name and rename the row with column totals "Total"
+<<>>=
 rownames(A2010) <- c(rownames(A2010)[-length(rownames(A2010))], "Total")
+@
 
-## cbind rowSums to dataframd
+cbind rowSums to dataframe
+<<>>=
 A2010 <- cbind(A2010,rowSums(A2010))
+@
 
-## rename last column "Totals
+rename last column "Totals
+<<>>=
 colnames(A2010) <- c(colnames(A2010)[-length(colnames(A2010))], "Total")
+@
 
+\subsubsection{2017 Data}
+Use strings in Col 1 as row names
 
-####################################################################################
-
-## Use strings in Col 1 as row names
+<<>>=
 rownames(A2017) <- A2017[,1]
+@
 
-## Drop column 1
+Drop column 1
+<<>>=
 A2017 <-  subset(A2017, select= -c(Sector))
+@
 
-## rbind ColSums to dataframe
+rbind ColSums to dataframe
+<<>>=
 A2017 <- rbind(A2017, colSums(A2017))
+@
 
-## rbind assigns a rowname -- drop this name
--length(rownames(A2017))  
-
-## rename the row with column totals "Total"
+rbind assigns a rowname -- drop this name and rename the row with column totals "Total"
+<<>>=
 rownames(A2017) <- c(rownames(A2017)[-length(rownames(A2017))], "Total")
+@
 
-## cbind rowSums to dataframd
+cbind rowSums to dataframe
+<<>>=
 A2017 <- cbind(A2017,rowSums(A2017))
+@
 
-## rename last column "Totals
+rename last column "Totals
+<<>>=
 colnames(A2017) <- c(colnames(A2017)[-length(colnames(A2017))], "Total")
 @
 
@@ -76,68 +140,36 @@ colnames(A2017) <- c(colnames(A2017)[-length(colnames(A2017))], "Total")
 
 \subsection{By Sector}
 <<fig=TRUE>>=
-par(mfcol=c(1,2),oma=c(0,0,2,0))
-
-barplot(A2010[1:9,13], 
-        names.arg = rownames(A2010)[1:9], 
-        las=2,
-        axisnames=TRUE,
-        main="2010",
-        border="blue",
-        col="yellow",
-        ylim=c(0,200000))
-
-barplot(A2017[1:9,13], 
-        names.arg = rownames(A2017)[1:9], 
-        las=2,
-        axisnames=TRUE,
-        main="2017",
-        border="blue",
-        col="yellow",
-        ylim=c(0,200000))
-
-title("Border Patrol Apprehensions by Sector", outer=TRUE)
-@
-
-\subsection{By Sector (Way Two)}
-
-<<fig=TRUE>>=
-year2010 <- t(as.data.frame(matrix(A2010[1:9,13])))
-colnames(year2010) <- rownames(A2010[1:9,])
+year2010s <- t(as.data.frame(matrix(A2010[1:9,13])))
+colnames(year2010s) <- rownames(A2010[1:9,])
+colnames(year2010s)[6] <- "Rio Grande"
     
-year2017 <- t(as.data.frame(matrix(A2017[1:9,13])))
-colnames(year2017) <- rownames(A2017[1:9,])
+year2017s <- t(as.data.frame(matrix(A2017[1:9,13])))
+colnames(year2017s) <- rownames(A2017[1:9,])
+colnames(year2017s)[6] <- "Rio Grande"
     
-year2010_17 <- rbind(year2010, year2017)
-row.names(year2010_17) <- c("2010", "2017")
+year2010_17s <- rbind(year2010s, year2017s)
+row.names(year2010_17s) <- c("2010", "2017")
     
-barplot(as.matrix(year2010_17), beside = TRUE, col = c("red", "blue"), bty="n",las=2)
+barplot(as.matrix(year2010_17s), beside = TRUE, col = c("red", "blue"), bty="n",las=2)
 legend("topleft", c("2010","2017"), pch=15,  col=c("red","blue"),  bty="n")
 title("Border Patrol Apprehensions by Sector")
 @
     
 \subsection{By Month}
 <<fig=TRUE>>=
-par(mfcol=c(1,2),oma=c(0,0,2,0))
-barplot(unname(t(A2010)[1:12,10]), 
-        names.arg = colnames(A2010)[1:12], 
-        las=2,
-        axisnames=TRUE,
-        main="2010",
-        border="blue",
-        col="yellow",
-        ylim=c(0,60000))
-
-
-barplot(unname(t(A2017)[1:12,10]), 
-        names.arg = colnames(A2017)[1:12], 
-        las=2,
-        axisnames=TRUE,
-        main="2017",
-        border="blue",
-        col="yellow",
-        ylim=c(0,60000))
-title("Border Patrol Apprehensions by Month", outer=TRUE)
+year2010m <- t(as.data.frame(matrix(unname(t(A2010)[1:12,10]))))
+colnames(year2010m) <- colnames(A2010[1:12])
+    
+year2017m <- t(as.data.frame(matrix(unname(t(A2017)[1:12,10]))))
+colnames(year2017m) <- colnames(A2017[1:12])
+    
+year2010_17m <- rbind(year2010m, year2017m)
+row.names(year2010_17m) <- c("2010", "2017")
+    
+barplot(as.matrix(year2010_17m), beside = TRUE, col = c("red", "blue"), bty="n",las=2)
+legend("topleft", c("2010","2017"), pch=15,  col=c("red","blue"),  bty="n")
+title("Border Patrol Apprehensions by Month")
 @
 
 \subsection{t-test}
