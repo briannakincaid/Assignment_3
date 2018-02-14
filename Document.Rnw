@@ -7,8 +7,7 @@
 \usepackage[left=2.00cm, right=2.00cm, top=2.00cm, bottom=2.00cm]{geometry}
 
 \begin{document}
-\DefineVerbatimEnvironment{Sinput}{Verbatim} {xleftmargin=2em,frame=single}
-\DefineVerbatimEnvironment{Soutput}{Verbatim}{xleftmargin=2em,frame=single}
+
 \SweaveOpts{concordance=TRUE}
 
 \title{US-Mexico Border Apprehensions}
@@ -73,8 +72,7 @@ Here we are organizing the data with column and row totals with the appropriate 
 
 \subsubsection{2010 Data}
 
-Use strings in Col 1 as row names
-
+Use the strings in column 1 as row names.
 <<>>=
 rownames(A2010) <- A2010[,1]
 @
@@ -84,29 +82,29 @@ Drop column 1
 A2010 <-  subset(A2010, select= -c(Sector))
 @
 
-rbind ColSums to dataframe
+Use rbind to add the sum across columns to the dataframe.
 <<>>=
 A2010 <- rbind(A2010, colSums(A2010))
 @
 
-rbind assigns a rowname -- drop this name and rename the row with column totals "Total"
+Drop that name that rbind assigns and rename the row that contains the column totals as "Total"
 <<>>=
 rownames(A2010) <- c(rownames(A2010)[-length(rownames(A2010))], "Total")
 @
 
-cbind rowSums to dataframe
+Use cbind to add the sum across rows to the dataframe.
 <<>>=
 A2010 <- cbind(A2010,rowSums(A2010))
 @
 
-rename last column "Totals
+Drop that name that cbind assigns and rename the column that contains the row totals as "Total"
 <<>>=
 colnames(A2010) <- c(colnames(A2010)[-length(colnames(A2010))], "Total")
 @
 
 \subsubsection{2017 Data}
-Use strings in Col 1 as row names
 
+Use the strings in column 1 as row names.
 <<>>=
 rownames(A2017) <- A2017[,1]
 @
@@ -116,22 +114,22 @@ Drop column 1
 A2017 <-  subset(A2017, select= -c(Sector))
 @
 
-rbind ColSums to dataframe
+Use rbind to add the sum across columns to the dataframe.
 <<>>=
 A2017 <- rbind(A2017, colSums(A2017))
 @
 
-rbind assigns a rowname -- drop this name and rename the row with column totals "Total"
+Drop that name that rbind assigns and rename the row that contains the column totals as "Total"
 <<>>=
 rownames(A2017) <- c(rownames(A2017)[-length(rownames(A2017))], "Total")
 @
 
-cbind rowSums to dataframe
+Use cbind to add the sum across rows to the dataframe.
 <<>>=
 A2017 <- cbind(A2017,rowSums(A2017))
 @
 
-rename last column "Totals
+Drop that name that cbind assigns and rename the column that contains the row totals as "Total"
 <<>>=
 colnames(A2017) <- c(colnames(A2017)[-length(colnames(A2017))], "Total")
 @
@@ -139,63 +137,119 @@ colnames(A2017) <- c(colnames(A2017)[-length(colnames(A2017))], "Total")
 \section{2010 and 2017 Compared}
 
 \subsection{By Sector}
-<<fig=TRUE>>=
+
+Here we compare the total apprehensions in each sector for 2010 and 2017. 
+\medskip
+Extracting sector data for 2010:
+<<>>=
 year2010s <- t(as.data.frame(matrix(A2010[1:9,13])))
 colnames(year2010s) <- rownames(A2010[1:9,])
 colnames(year2010s)[6] <- "Rio Grande"
-    
+@
+ 
+Extracting sector data for 2017:
+<<>>=   
 year2017s <- t(as.data.frame(matrix(A2017[1:9,13])))
 colnames(year2017s) <- rownames(A2017[1:9,])
 colnames(year2017s)[6] <- "Rio Grande"
-    
+@
+
+Combining sector data for 2010 and 2017:
+<<>>=    
 year2010_17s <- rbind(year2010s, year2017s)
 row.names(year2010_17s) <- c("2010", "2017")
-    
+@
+
+Creating a bar plot:
+<<fig=TRUE>>=
 barplot(as.matrix(year2010_17s), beside = TRUE, col = c("red", "blue"), bty="n",las=2)
 legend("topleft", c("2010","2017"), pch=15,  col=c("red","blue"),  bty="n")
 title("Border Patrol Apprehensions by Sector")
 @
     
+The sector with the largest number of apprehensions for the year changed from Tucson in 2010 to Rio Grande Valley in 2017.
+
 \subsection{By Month}
-<<fig=TRUE>>=
+Here we compare the total apprehensions for each month in 2010 and 2017.
+
+\medskip
+
+Extracting monthly data for 2010:
+<<>>=
 year2010m <- t(as.data.frame(matrix(unname(t(A2010)[1:12,10]))))
 colnames(year2010m) <- colnames(A2010[1:12])
-    
+@
+
+Extracting monthly data for 2017:
+<<>>=   
 year2017m <- t(as.data.frame(matrix(unname(t(A2017)[1:12,10]))))
 colnames(year2017m) <- colnames(A2017[1:12])
-    
+@
+
+Combining monthly data for 2010 and 2017:
+<<>>=    
 year2010_17m <- rbind(year2010m, year2017m)
 row.names(year2010_17m) <- c("2010", "2017")
-    
+@
+
+Creating a bar plot:
+<<fig=TRUE>>=   
 barplot(as.matrix(year2010_17m), beside = TRUE, col = c("red", "blue"), bty="n",las=2)
 legend("topleft", c("2010","2017"), pch=15,  col=c("red","blue"),  bty="n")
 title("Border Patrol Apprehensions by Month")
 @
 
+As can be seen in the data, the trend throughout the year regarding total apprehensions across sectors changed drastically from 2010 to 2017. The two months with the highest apprehensions in 2010 (March and April) had the least amount of apprehensions in 2017. Furthermore, the month with the highest number of apprehensions in 2010 had more than 10,000 more apprehensions that the month ith the greatest umber of apprehensions in 2017.
+
 \subsection{t-test}
 
-\subsubsection{Comparison between sector with most apprehensions for 2010 with sector with most apprehensions in 2017}
+\subsubsection{A comparison between the sector with most apprehensions for 2010 and the sector with most apprehensions in 2017}
 
+First we must extract the total apprehensions by sector for 2010. 
 <<>>=
 Sector_Totals_2010 <- A2010[1:9,13]
 names(Sector_Totals_2010) <- rownames(A2010[1:9,])
+@
 
+Then we do the same thing for 2017.
+<<>>=
 Sector_Totals_2017 <- A2017[1:9,13]
 names(Sector_Totals_2017) <- rownames(A2017[1:9,])
+@
 
+Then we use these totals to determine the indeces of the sector with the greatest number of apprehensions. 
+<<>>=
 MA_2017_index <- which(Sector_Totals_2017 == max(Sector_Totals_2017))
 MA_2010_index <- which(Sector_Totals_2010 == max(Sector_Totals_2010))
+@
 
+We use these indeces to extract the monthly data for the sectors with the greatest number of apprehensions in 2010 and 2017.
+<<>>=
 MA_2017 <- A2017[MA_2017_index,1:12]
 MA_2010 <- A2010[MA_2010_index,1:12]
+@
 
+
+<<results=hide>>=
 t.test(MA_2010,MA_2017)
+@
 
+\textbf{Welch Two Sample t-test}
+
+
+<<results=hide>>=
 t.test(MA_2010,A2017[MA_2010_index,1:12])
+@
+
+\textbf{Welch Two Sample t-test}
+
+<<results=hide>>=
 t.test(MA_2017,A2010[MA_2017_index,1:12])
 @
 
-\subsubsection{compare 3 month periods with the most apprehensions in 2010 and 2017}
+\textbf{Welch Two Sample t-test}
+
+\subsubsection{A comparison between the 3 month periods with the most apprehensions in 2010 and 2017}
 
 <<>>=
 col <- c("Oct-Dec", "Jan-Mar", "Apr-Jun","Jul-Sep")
@@ -208,30 +262,77 @@ Monthly_Totals_2017 <- (t(A2017)[1:12,10])
 
   #Breakdown 
   A2017_3 <- rbind(sum(Monthly_Totals_2017[1:3]),sum(Monthly_Totals_2017[4:6]),sum(Monthly_Totals_2017[7:9]),sum(Monthly_Totals_2017[10:12]))
-  
+@
+
+<<results=hide>>=
 t.test(Monthly_Totals_2010[4:6],Monthly_Totals_2017[1:3])
 @
+
+\textbf{Welch Two Sample t-test}
 
 \section{Overall Trends}
 
 \subsection{Data Cleaning}
+
+Here we import monthly summaries of apprehensions across all sectors for years 2000 to 2017. 
+
 <<>>=
-
 A2000.2017 <- read.csv("PB monthly summaries.csv", header = TRUE, stringsAsFactors = FALSE)
+@
 
-## Use strings in Col 1 as row names
+\begin{table}[ht]
+\centering
+\begin{tabular}{p{0.25in}cccccccccccc}
+  \hline
+ & October & November & December & January & February & March & April & May & June & July & August & September \\ 
+  \hline
+2000 & 91410 & 76196 & 71252 & 185979 & 211328 & 220063 & 180050 & 166296 & 115093 & 113956 & 114312 & 97744 \\ 
+  2001 & 82632 & 67709 & 55081 & 125090 & 152229 & 170580 & 142813 & 122927 & 89131 & 83602 & 84648 & 59276 \\ 
+  2002 & 37812 & 32506 & 31501 & 79793 & 95724 & 126992 & 121921 & 97424 & 78655 & 76661 & 82557 & 68263 \\ 
+  2003 & 61792 & 47731 & 37824 & 86925 & 96869 & 98399 & 75359 & 88690 & 75530 & 79284 & 84486 & 72176 \\ 
+  2004 & 65391 & 57894 & 43614 & 92521 & 110669 & 154981 & 135468 & 118726 & 94590 & 92165 & 93246 & 80017 \\ 
+  2005 & 75913 & 65135 & 48406 & 93020 & 113775 & 143048 & 140062 & 115823 & 90786 & 94954 & 96733 & 93741 \\ 
+  2006 & 83557 & 70975 & 52673 & 101195 & 125046 & 160696 & 126538 & 105450 & 68366 & 59641 & 59751 & 58084 \\ 
+  2007 & 60713 & 51594 & 40527 & 71934 & 79268 & 114137 & 104465 & 88504 & 71338 & 66782 & 59795 & 49581 \\ 
+  2008 & 51339 & 42209 & 31802 & 59028 & 73483 & 89770 & 91566 & 69233 & 53854 & 49472 & 48541 & 44708 \\ 
+  2009 & 42938 & 32780 & 25947 & 44502 & 49211 & 67342 & 58493 & 50884 & 46044 & 43843 & 43522 & 35359 \\ 
+  2010 & 40890 & 32815 & 25034 & 34784 & 42790 & 61361 & 55237 & 47045 & 32955 & 25609 & 26415 & 22796 \\ 
+  2011 & 26165 & 22405 & 19429 & 23926 & 28786 & 42014 & 36251 & 31236 & 27166 & 23170 & 24166 & 22863 \\ 
+  2012 & 25612 & 23368 & 18983 & 25714 & 31579 & 42218 & 40628 & 36966 & 30669 & 26978 & 27567 & 26591 \\ 
+  2013 & 28929 & 27636 & 23243 & 26921 & 35042 & 47293 & 48212 & 43856 & 34436 & 33230 & 33797 & 31802 \\ 
+  2014 & 35312 & 31896 & 29528 & 28668 & 36403 & 49596 & 51502 & 60683 & 57862 & 40708 & 31388 & 25825 \\ 
+  2015 & 26450 & 24641 & 25019 & 21514 & 24376 & 29791 & 29750 & 31576 & 29303 & 28388 & 30239 & 30286 \\ 
+  2016 & 32724 & 32838 & 37014 & 23758 & 26072 & 33316 & 38089 & 40337 & 34450 & 33723 & 37048 & 39501 \\ 
+  2017 & 46184 & 47211 & 43251 & 31576 & 18754 & 12195 & 11127 & 14519 & 16087 & 18187 & 22288 & 22537 \\ 
+   \hline
+\end{tabular}
+\caption{Total apprehensions for all sectors for years 2000 to 2017} 
+\end{table}
+
+Use the strings in column 1 as row names.
+<<>>=
 rownames(A2000.2017) <- A2000.2017[,1]
+@
 
-## Drop column 1
+Drop column 1
+<<>>=
 A2000.2017 <-  subset(A2000.2017, select= -c(year))
+@
 
-## Reorder
+Reorder the rows so that the years list from 2000 to 2017.
+<<>>=
 A2000.2017 <- A2000.2017[18:1,]
+@
+
+Remove the rownames and column names from the data frame in order to prepare to make it a time series.
+<<>>=
 rownames(A2000.2017) <- c()
 A2000.2017 <- unname(A2000.2017)
 @
 
 \subsection{Time Series}
+
+Here we use the monthly summaries data in order to create a time series.
 <<fig=TRUE>>=
 ts2 <- as.vector(t(A2000.2017))
 time_series <- ts(ts2, start = c(2000,10), frequency=12)
@@ -240,7 +341,6 @@ ts.plot(time_series, gpars=list(xlab="year", ylab="Apprehensions", lty=c(1:3)))
 meanbyyear <- rowMeans(A2000.2017)
 years <- c(2000:2017)
 lines(years,meanbyyear,col="red")
-
 
 title("Border Patrol Apprehensions Year")
 legend("topright", c("Average Apprehensions"), pch=15,  col="red",  bty="n")
