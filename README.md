@@ -8,15 +8,19 @@ Kevin Chan, Brianna Kincaid, Lauren Vanvalkenburg
 - PB Apprehensions 2017.csv
 - PB monthly summaries.csv
 
+### Project File:
+Assignment_3.Rproj
+
 ### Base Analysis: 
 Analysis.R (R Script)
 
 ### Final presentations of analysis:
-Document.Rnw (R Markdown of Document)
-Document.pdf (PDF of Document)
+- Document.Rnw (R Markdown of Document)
+- Document.pdf (PDF of Document)
+- Slides.Rmd (R Markdown of Slides)
+- Slides.html (HTML of Slides)
+- app.R (Shiny App)
 
-Slides.Rmd (R Markdown of Slides)
-Slides.html (HTML of Slides)
 
 
 
