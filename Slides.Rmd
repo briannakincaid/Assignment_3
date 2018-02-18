@@ -1,0 +1,132 @@
+---
+title: "Assignment 3 - Section 1 Project"
+author: "Lauren VanValkenburg, Kevin Chan, and Brianna Kincaid"
+date: "2/10/2018"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## US-Mexico Border Apprehensions from 2010 to 2017
+
+- Over the past 17 years, apprehensions at the US-Mexico border have reached a historic low. 
+- Some credit the decrease in apprehensions to President Donald Trump's enforcement of immigration laws.
+- In April 2017, there were 11,129 apprehensions at the Southwest border, a 62% drop from the previous April. 
+- February and March also saw a decrease in apprehensions, which has not been the case since 2000. 
+
+## Compare 2010 and 2017 Data by Sector
+
+```{r, echo=FALSE}
+A2010 <- read.csv( "BP Apprehensions 2010.csv" , header = TRUE, stringsAsFactors = FALSE)
+A2017 <- read.csv("PB Apprehensions 2017.csv", header = TRUE, stringsAsFactors = FALSE)
+A2000.2017 <- read.csv("PB monthly summaries.csv", header = TRUE, stringsAsFactors = FALSE)
+
+rownames(A2000.2017) <- A2000.2017[,1]
+
+A2000.2017 <-  subset(A2000.2017, select= -c(year))
+
+A2000.2017 <- A2000.2017[18:1,]
+rownames(A2000.2017) <- c()
+A2000.2017 <- unname(A2000.2017)
+
+rownames(A2010) <- A2010[,1]
+
+A2010 <-  subset(A2010, select= -c(Sector))
+
+A2010 <- rbind(A2010, colSums(A2010))
+
+rownames(A2010) <- c(rownames(A2010)[-length(rownames(A2010))], "Total")
+
+A2010 <- cbind(A2010,rowSums(A2010))
+
+colnames(A2010) <- c(colnames(A2010)[-length(colnames(A2010))], "Total")
+
+rownames(A2017) <- A2017[,1]
+
+A2017 <-  subset(A2017, select= -c(Sector))
+
+A2017 <- rbind(A2017, colSums(A2017))
+
+rownames(A2017) <- c(rownames(A2017)[-length(rownames(A2017))], "Total")
+
+A2017 <- cbind(A2017,rowSums(A2017))
+
+colnames(A2017) <- c(colnames(A2017)[-length(colnames(A2017))], "Total")
+ year2010 <- t(as.data.frame(matrix(A2010[1:9,13])))
+    colnames(year2010) <- rownames(A2010[1:9,])
+    
+    year2017 <- t(as.data.frame(matrix(A2017[1:9,13])))
+    colnames(year2017) <- rownames(A2017[1:9,])
+    
+    year2010_17 <- rbind(year2010, year2017)
+    row.names(year2010_17) <- c("2010", "2017")
+    
+    barplot(as.matrix(year2010_17), beside = TRUE, col = c("red", "blue"), bty="n",las=2)
+    legend("topleft", c("2010","2017"), pch=15,  col=c("red","blue"),  bty="n")
+    
+title("Border Patrol Apprehensions by Sector")
+
+```
+
+## Compare 2010 and 2017 Data by Sector
+
+Tucson had the largest decrease in apprehensions from 2010 to 2017. The Rio Grande Valley had a significant increase in apprehensions from 2010 to 2017. The remaining sectors either showed a slight decrease in apprehensions or showed almost no change between 2010 to 2017.
+
+## Compare 2010 and 2017 Data Monthly
+
+```{r}
+year2010 <- t(as.data.frame(matrix(unname(t(A2010)[1:12,10]))))
+    colnames(year2010) <- colnames(A2010[1:12])
+    
+    year2017 <- t(as.data.frame(matrix(unname(t(A2017)[1:12,10]))))
+    colnames(year2017) <- colnames(A2017[1:12])
+    
+    year2010_17 <- rbind(year2010, year2017)
+    row.names(year2010_17) <- c("2010", "2017")
+    
+    barplot(as.matrix(year2010_17), beside = TRUE, col = c("red", "blue"), bty="n", las=2 )
+    legend("topleft", c("2010","2017"), pch=15,  col=c("red","blue"),  bty="n")
+title("Border Patrol Apprehensions by Month")
+```
+
+## Compare 2010 and 2017 Data Monthly
+
+As can be seen in the data, the trend throughout the year regarding total apprehensions across sectors changed drastically from 2010 to 2017. The two months with the highest apprehensions in 2010 (March and April) had the least amount of apprehensions in 2017. Furthermore, the month with the highest number of apprehensions in 2010 had more than 10,000 more apprehensions that the month ith the greatest umber of apprehensions in 2017.
+
+## Sample Statistics Test Results
+
+We compared the sector with the most apprehensions for 2010 with the sector with most apprehensions in 2017 at a 5% significance level. 
+
+- The sectors with the highest apprehensions in 2010 and 2017 are Tuscan and Rio Grande Valley, respectively. The t test resulted in a p-value of .06346, which at 5% significance means the difference between the two sectors is not statistically significant. 
+
+## Sample Statistics Test Results
+
+We also decided to compare 2010 with 2017 Tuscan and 2010 with 2017 Rio Grande Valley. 
+
+- The t test between 2010 and 2017 Tuscan resulted in a p-value of .00003545, which is statistically significant. Which means there is a considerable difference between the amount of apprehensions in Tuscan from 2010 to 2017. 
+
+- The t test between 2010 and 2017 Rio Grande Valley resulted in a p-value of .01686, which is also statistically significant. There is a noticeable difference between the number of apprehensions in Rio Grande Valley from 2010 to 2017. 
+
+## Comparison of 3 Month Periods with the Most Apprehensions in 2010 to 2017
+
+In 2010, the three month period with the most apprehensions is January, February and March. In 2017, the three month period with the most apprehensions is October, November and December. We ran a t test comparing these three month periods with a 5% significance level. 
+
+- The t test resulted in a p-value of .932, which is not statistically significant. There is not a significant difference in the amount of apprehensions in January, February and March of 2010 and October, November and December of 2017.
+
+## Time Series Graph
+
+```{r}
+ts2 <- as.vector(t(A2000.2017))
+time_series <- ts(ts2, start = c(2000,10), frequency=12)
+ts.plot(time_series, gpars=list(xlab="Year", ylab="Apprehensions", lty=c(1:3)))
+
+meanbyyear <- rowMeans(A2000.2017)
+years <- c(2000:2017)
+lines(years,meanbyyear,col="red")
+
+title("Border Patrol Apprehensions Year")
+legend("topright", c("Average Apprehensions"), pch=15,  col="red",  bty="n")
+```
+There has been a steady decrease in apprehensions from 2000 to 2017.

@@ -15,7 +15,7 @@
 \date{}
 \maketitle
 
-Data on U.S. Border Patrol Southwest Border Apprehensions released by the US Customs and Border Protrection (CBP) in 2017 revealed that apprehensions of individuals attempting to illegally cross the Southern border has decreased from 447,731 in 2010 to 303,196 in 2017. Here is an analysis of that data. 
+Over the past 17 years, apprehensions at the US-Mexico border have reached a historic low. Data on U.S. Border Patrol Southwest Border Apprehensions released by the US Customs and Border Protrection (CBP) in 2017 revealed that apprehensions of individuals attempting to illegally cross the Southern border has decreased from 447,731 in 2010 to 303,196 in 2017. Some credit the decrease in apprehensions to President Donald Trump's enforcement of immigration laws. In April 2017, there were 11,129 apprehensions at the Southwest border, a 62\% drop from the previous April. February and March also saw a decrease in apprehensions, which has not been the case since 2000. 
 
 \section{Data Import and Cleaning}
 
@@ -27,6 +27,7 @@ A2017 <- read.csv("PB Apprehensions 2017.csv", header = TRUE, stringsAsFactors =
 
 \begin{table}[ht]
 \centering
+\scalebox{0.75}{
 \begin{tabular}{p{0.7in}cccccccccccc}
   \hline
  & October & November & December & January & February & March & April & May & June & July & August & September \\ 
@@ -41,12 +42,13 @@ Big Bend & 530.00 & 421.00 & 373.00 & 433.00 & 484.00 & 660.00 & 575.00 & 493.00
   Tucson & 23197.00 & 16986.00 & 10907.00 & 16122.00 & 21266.00 & 31197.00 & 28579.00 & 22572.00 & 13160.00 & 10303.00 & 9280.00 & 8633.00 \\ 
   Yuma & 582.00 & 649.00 & 711.00 & 586.00 & 819.00 & 1059.00 & 732.00 & 608.00 & 447.00 & 401.00 & 262.00 & 260.00 \\ 
    \hline
-\end{tabular}
+\end{tabular}}
 \caption{CBP Data for 2010} 
 \end{table}
 
 \begin{table}[ht]
 \centering
+\scalebox{0.75}{
 \begin{tabular}{p{0.7in}cccccccccccc}
   \hline
  & October & November & December & January & February & March & April & May & June & July & August & September \\ 
@@ -61,7 +63,7 @@ Big Bend & 697.00 & 603.00 & 477.00 & 473.00 & 383.00 & 357.00 & 413.00 & 552.00
   Tucson & 5924.00 & 5912.00 & 4303.00 & 3357.00 & 2589.00 & 2148.00 & 1487.00 & 2199.00 & 2632.00 & 2177.00 & 2913.00 & 3016.00 \\ 
   Yuma & 2117.00 & 2034.00 & 1859.00 & 1156.00 & 534.00 & 336.00 & 245.00 & 534.00 & 548.00 & 894.00 & 1318.00 & 1272.00 \\ 
    \hline
-\end{tabular}
+\end{tabular}}
 \caption{CBP Data for 2017} 
 \end{table}
 
@@ -229,6 +231,10 @@ MA_2017 <- A2017[MA_2017_index,1:12]
 MA_2010 <- A2010[MA_2010_index,1:12]
 @
 
+\noindent\rule{\textwidth}{0.4pt}
+\medskip
+
+We compared the sector with the most apprehensions for 2010 with the sector with most apprehensions in 2017 at a 5-percent significance level. The sectors with the highest apprehensions in 2010 and 2017 are Tuscan and Rio Grande Valley, respectively. 
 
 <<results=hide>>=
 t.test(MA_2010,MA_2017)
@@ -236,6 +242,25 @@ t.test(MA_2010,MA_2017)
 
 \textbf{Welch Two Sample t-test}
 
+data: MA2010 and MA2017\par
+t = 1.9547\par
+df = 21.973\par
+p-value = 0.06346\par
+alternative hypothesis: true difference in means is not equal to 0\par
+95 percent confidence interval: -379.5935  12819.5935\par
+\par
+\bigskip
+\textbf{sample estimates:}\par
+mean of x: 17683.5\par
+mean of y: 11463.5\par
+\bigskip
+The t test resulted in a p-value of .06346, which at 5-percent significance means the difference between the two sectors is not statistically significant.\par
+\medskip
+
+\noindent\rule{\textwidth}{0.4pt}
+\medskip
+
+We also decided to compare 2010 with 2017 Tuscan and 2010 with 2017 Rio Grande Valley.\par
 
 <<results=hide>>=
 t.test(MA_2010,A2017[MA_2010_index,1:12])
@@ -243,11 +268,40 @@ t.test(MA_2010,A2017[MA_2010_index,1:12])
 
 \textbf{Welch Two Sample t-test}
 
+data: Tuscan 2010 and Tuscon 2017\par
+t = 6.4303\par
+df = 11.781\par
+p-value = 3.545e-05\par
+alternative hypothesis: true difference in means is not equal to 0\par
+95 percent confidence interval: 9551.716  19372.450\par
+\par
+\bigskip
+\textbf{sample estimates:}\par
+mean of x: 17683.500\par
+mean of y: 3221.417\par
+\bigskip
+
+The t test between 2010 and 2017 Tuscan resulted in a p-value of .00003545, which is statistically significant. Which means there is a considerable difference between the amount of apprehensions in Tuscan from 2010 to 2017. 
+
 <<results=hide>>=
 t.test(MA_2017,A2010[MA_2017_index,1:12])
 @
 
 \textbf{Welch Two Sample t-test}
+
+data: Rio Grande Valley 2010 and Rio Grande Valley 2017\par
+t = 2.7789\par
+df = 11.846\par
+p-value = 0.01686\par
+alternative hypothesis: true difference in means is not equal to 0\par
+95 percent confidence interval: 1392.65  11573.35\par
+\par
+\bigskip
+\textbf{sample estimates:}\par
+mean of x: 11463.5\par
+mean of y: 4980.5 \par
+\bigskip
+The t test between 2010 and 2017 Rio Grande Valley resulted in a p-value of .01686, which is also statistically significant. There is a noticeable difference between the number of apprehensions in Rio Grande Valley from 2010 to 2017.
 
 \subsubsection{A comparison between the 3 month periods with the most apprehensions in 2010 and 2017}
 
@@ -255,20 +309,34 @@ t.test(MA_2017,A2010[MA_2017_index,1:12])
 col <- c("Oct-Dec", "Jan-Mar", "Apr-Jun","Jul-Sep")
 Monthly_Totals_2010 <- (t(A2010)[1:12,10])
 
-  #Breakdown 
-  A2010_3 <- rbind(sum(Monthly_Totals_2010[1:3]),sum(Monthly_Totals_2010[4:6]),sum(Monthly_Totals_2010[7:9]),sum(Monthly_Totals_2010[10:12]))
+A2010_3 <- rbind(sum(Monthly_Totals_2010[1:3]),sum(Monthly_Totals_2010[4:6]),sum(Monthly_Totals_2010[7:9]),sum(Monthly_Totals_2010[10:12]))
 
 Monthly_Totals_2017 <- (t(A2017)[1:12,10])
 
-  #Breakdown 
-  A2017_3 <- rbind(sum(Monthly_Totals_2017[1:3]),sum(Monthly_Totals_2017[4:6]),sum(Monthly_Totals_2017[7:9]),sum(Monthly_Totals_2017[10:12]))
+A2017_3 <- rbind(sum(Monthly_Totals_2017[1:3]),sum(Monthly_Totals_2017[4:6]),sum(Monthly_Totals_2017[7:9]),sum(Monthly_Totals_2017[10:12]))
 @
+
+In 2010, the three month period with the most apprehensions is January, February and March. In 2017, the three month period with the most apprehensions is October, November and December. We ran a t test comparing these three month periods with a 5-percent significance level.
 
 <<results=hide>>=
 t.test(Monthly_Totals_2010[4:6],Monthly_Totals_2017[1:3])
 @
 
 \textbf{Welch Two Sample t-test}
+
+data: Jan/Feb/March 2010 and Oct/Nov/Dec 2017\par
+t = 0.095848\par
+df = 2.0908\par
+p-value = 0.932\par
+alternative hypothesis: true difference in means is not equal to 0\par
+95 percent confidence interval: -32101.2  33627.2\par
+\par
+\bigskip
+\textbf{sample estimates:}\par
+mean of x: 46311.67\par
+mean of y: 45548.67\par
+\bigskip
+The t test resulted in a p-value of .932, which is not statistically significant. There is not a significant difference in the amount of apprehensions in January, February and March of 2010 and October, November and December of 2017.
 
 \section{Overall Trends}
 
@@ -280,8 +348,24 @@ Here we import monthly summaries of apprehensions across all sectors for years 2
 A2000.2017 <- read.csv("PB monthly summaries.csv", header = TRUE, stringsAsFactors = FALSE)
 @
 
+Use the strings in column 1 as row names.
+<<>>=
+rownames(A2000.2017) <- A2000.2017[,1]
+@
+
+Drop column 1
+<<>>=
+A2000.2017 <-  subset(A2000.2017, select= -c(year))
+@
+
+Reorder the rows so that the years list from 2000 to 2017.
+<<>>=
+A2000.2017 <- A2000.2017[18:1,]
+@
+
 \begin{table}[ht]
 \centering
+\scalebox{0.80}{
 \begin{tabular}{p{0.25in}cccccccccccc}
   \hline
  & October & November & December & January & February & March & April & May & June & July & August & September \\ 
@@ -305,24 +389,9 @@ A2000.2017 <- read.csv("PB monthly summaries.csv", header = TRUE, stringsAsFacto
   2016 & 32724 & 32838 & 37014 & 23758 & 26072 & 33316 & 38089 & 40337 & 34450 & 33723 & 37048 & 39501 \\ 
   2017 & 46184 & 47211 & 43251 & 31576 & 18754 & 12195 & 11127 & 14519 & 16087 & 18187 & 22288 & 22537 \\ 
    \hline
-\end{tabular}
+\end{tabular}}
 \caption{Total apprehensions for all sectors for years 2000 to 2017} 
 \end{table}
-
-Use the strings in column 1 as row names.
-<<>>=
-rownames(A2000.2017) <- A2000.2017[,1]
-@
-
-Drop column 1
-<<>>=
-A2000.2017 <-  subset(A2000.2017, select= -c(year))
-@
-
-Reorder the rows so that the years list from 2000 to 2017.
-<<>>=
-A2000.2017 <- A2000.2017[18:1,]
-@
 
 Remove the rownames and column names from the data frame in order to prepare to make it a time series.
 <<>>=
